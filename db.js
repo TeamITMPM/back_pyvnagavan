@@ -1,2 +1,2 @@
 const { Sequelize } = require("sequelize");
-module.express;
+module.express = new Sequelize();
