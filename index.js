@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 // что б приложение могло парсить json формат
 app.use(express.json());
-app.use('./api', router);
+app.use('/api', router);
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Воно працює=)' });
