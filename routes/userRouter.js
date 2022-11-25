@@ -1,5 +1,4 @@
 const Router = require('express');
-const { registration } = require('../controllers/userController');
 const router = new Router();
 const UserController = require('../controllers/userController');
 
