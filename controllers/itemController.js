@@ -32,12 +32,13 @@ class ItemController {
 
     async getAll(req, res) {
         let { brandId, typeId, limit, page } = req.query;
-        page = page || 1;
-        limit = limit || 9;
+        page = Number(page) || 1;
+        limit = Number(limit) || 9;
+
         let offset = page * limit - limit;
         let item;
         if (!brandId && !typeId) {
-            item = await Item.findAndCountAll({ limit, offset });
+            item = await Item.findAndCountAll({ offset, limit });
         }
         if (brandId && !typeId) {
             item = await Item.findAndCountAll({
