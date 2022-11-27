@@ -15,6 +15,7 @@ const app = express();
 app.use(cors());
 // что б приложение могло парсить json формат
 app.use(express.json());
+// что б файлы с папки static необходимо раздавать как статику
 app.use(express.static(path.resolve(__dirname, 'static')));
 // что б работать с файлами
 app.use(fileUpload({}));

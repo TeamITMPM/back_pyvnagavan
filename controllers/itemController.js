@@ -31,21 +31,36 @@ class ItemController {
     }
 
     async getAll(req, res) {
-        const { brandId, typeId } = req.query;
-        let items;
+        let { brandId, typeId, limit, page } = req.query;
+        page = page || 1;
+        limit = limit || 9;
+        let offset = page * limit - limit;
+        let item;
         if (!brandId && !typeId) {
-            items = await Item.findAll();
+            item = await Item.findAndCountAll({ limit, offset });
         }
         if (brandId && !typeId) {
-            items = await Item.findAll({ where: { brandId } });
+            item = await Item.findAndCountAll({
+                where: { brandId },
+                limit,
+                offset,
+            });
         }
         if (!brandId && typeId) {
-            items = await Item.findAll({ where: { typeId } });
+            item = await Item.findAndCountAll({
+                where: { typeId },
+                limit,
+                offset,
+            });
         }
         if (brandId && typeId) {
-            items = await Item.findAll({ where: { typeId, brandId } });
+            item = await Item.findAndCountAll({
+                where: { typeId, brandId },
+                limit,
+                offset,
+            });
         }
-        return res.json(items);
+        return res.json(item);
     }
     async getOne(req, res) {}
 }
