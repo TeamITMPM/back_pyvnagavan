@@ -30,7 +30,23 @@ class ItemController {
         }
     }
 
-    async getAll(req, res) {}
+    async getAll(req, res) {
+        const { brandId, typeId } = req.query;
+        let items;
+        if (!brandId && !typeId) {
+            items = await Item.findAll();
+        }
+        if (brandId && !typeId) {
+            items = await Item.findAll({ where: { brandId } });
+        }
+        if (!brandId && typeId) {
+            items = await Item.findAll({ where: { typeId } });
+        }
+        if (brandId && typeId) {
+            items = await Item.findAll({ where: { typeId, brandId } });
+        }
+        return res.json(items);
+    }
     async getOne(req, res) {}
 }
 

@@ -16,6 +16,7 @@ app.use(cors());
 // что б приложение могло парсить json формат
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')));
+// что б работать с файлами
 app.use(fileUpload({}));
 app.use('/api', router);
 
