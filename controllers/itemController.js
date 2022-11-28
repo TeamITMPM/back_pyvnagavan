@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const path = require('path');
-const { Item } = require('../models/models');
+const { Item, ItemInfo } = require('../models/models');
 
 const ApiError = require('../error/ApiError');
 
@@ -12,6 +12,16 @@ class ItemController {
             const { img } = req.files;
             let fileName = uuid.v4() + '.jpg';
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
+            if (info) {
+                info = JSON.parse(info);
+                info.forEach(i =>
+                    ItemInfo.create({
+                        title: i.title,
+                        description: i.description,
+                        deviceId: i.deviceId,
+                    }),
+                );
+            }
 
             const item = await Item.create({
                 name,
@@ -63,7 +73,14 @@ class ItemController {
         }
         return res.json(item);
     }
-    async getOne(req, res) {}
+    async getOne(req, res) {
+        const { id } = req.params;
+        const item = await Item.findOne({
+            where: { id },
+            include: [{ model: ItemInfo, as: 'info' }],
+        });
+        return res.json(item);
+    }
 }
 
 module.exports = new ItemController();
