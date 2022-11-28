@@ -8,10 +8,10 @@ const User = sequelize.define('user', {
     password: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: 'USER' },
     phone: { type: DataTypes.STRING, unique: true },
-    discont: { type: DataTypes.TINYINT },
+    discont: { type: DataTypes.TINYINT, defaultValue: 0 },
     firstName: { type: DataTypes.STRING },
     secondName: { type: DataTypes.STRING },
-    clientRating: { type: DataTypes.TINYINT },
+    clientRating: { type: DataTypes.TINYINT, defaultValue: 0 },
     dateOfBirthsday: { type: DataTypes.DATEONLY },
 });
 
