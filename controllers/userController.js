@@ -19,6 +19,12 @@ class UserController {
         const hashPassword = await bcrypt.hash(password, 5);
         const user = await User.create({ email, role, password: hashPassword });
         const basket = await Basket.create({ userId: user.id });
+        const token = jwt.sign(
+            { id: user.id, email, role },
+            process.env.SECRET_KEY,
+            { expiresIn: '24' },
+        );
+        return res.json({ token });
     }
 
     async login(req, res) {}
