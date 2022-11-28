@@ -16,8 +16,10 @@ class UserController {
             password,
             role,
             phone,
+            discount,
             firstName,
             secondName,
+            clientRating,
             dateOfBirthsday,
         } = req.body;
         if (
@@ -30,27 +32,33 @@ class UserController {
         ) {
             return next(ApiError.badRequest('Некоректні данні'));
         }
+
         // Проверка на такой же emaile
-        const candidate = await User.findOne({ where: { email } });
-        if (candidate) {
-            return next(
-                ApiError.badRequest(
-                    'Пользователь с таким email уже существует',
-                ),
-            );
-        }
+        // const candidate = await User.findOne({ where: { email } });
+
+        // if (candidate) {
+        //     return next(
+        //         ApiError.badRequest(
+        //             'Пользователь с таким email уже существует',
+        //         ),
+        //     );
+        // }
         // Хешируем пароль
         const hashPassword = await bcrypt.hash(password, 5);
+
         // Создаем пользователя
         const user = await User.create({
             email,
-            role,
             password: hashPassword,
+            role,
             phone,
+            discount,
             firstName,
             secondName,
+            clientRating,
             dateOfBirthsday,
         });
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         // Создаем для пользователя корзину
         const basket = await Basket.create({ userId: user.id });
         const token = jwt.sign(
@@ -59,13 +67,16 @@ class UserController {
                 email,
                 role,
                 phone,
+                discount,
                 firstName,
                 secondName,
+                clientRating,
                 dateOfBirthsday,
             },
             process.env.SECRET_KEY,
             { expiresIn: '24H' },
         );
+
         return res.json({ token });
     }
 
