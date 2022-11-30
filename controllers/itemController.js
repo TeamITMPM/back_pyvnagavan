@@ -48,13 +48,18 @@ class ItemController {
         let offset = page * limit - limit;
         let item;
         if (!brandId && !typeId) {
-            item = await Item.findAndCountAll({ offset, limit });
+            item = await Item.findAndCountAll({
+                offset,
+                limit,
+                include: [{ model: ItemInfo, as: 'info' }],
+            });
         }
         if (brandId && !typeId) {
             item = await Item.findAndCountAll({
                 where: { brandId },
                 limit,
                 offset,
+                include: [{ model: ItemInfo, as: 'info' }],
             });
         }
         if (!brandId && typeId) {
@@ -62,6 +67,7 @@ class ItemController {
                 where: { typeId },
                 limit,
                 offset,
+                include: [{ model: ItemInfo, as: 'info' }],
             });
         }
         if (brandId && typeId) {
@@ -69,6 +75,7 @@ class ItemController {
                 where: { typeId, brandId },
                 limit,
                 offset,
+                include: [{ model: ItemInfo, as: 'info' }],
             });
         }
         return res.json(item);
