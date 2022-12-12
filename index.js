@@ -9,6 +9,7 @@ const errorHandler = require('./middleware/ErrorHandlingMiddleware');
 const path = require('path');
 
 const PORT = process.env.PORT || 5000;
+const IP = process.env.IP;
 
 const app = express();
 // что б отправлять запросы с брвузера
@@ -32,7 +33,7 @@ const start = async () => {
     try {
         await sequelize.authenticate();
         await sequelize.sync();
-        app.listen(PORT, () =>
+        app.listen(PORT, IP, () =>
             console.log(`Server fucking started on port ${PORT}`),
         );
     } catch (err) {
