@@ -14,12 +14,9 @@ class UserController {
         const {
             email,
             password,
-            role,
             phone,
-            discount,
             firstName,
             secondName,
-            clientRating,
             dateOfBirthsday,
         } = req.body;
         if (
