@@ -18,6 +18,7 @@ class UserController {
             firstName,
             secondName,
             dateOfBirthsday,
+            favouriteBeer,
         } = req.body;
         if (
             !email ||
@@ -47,13 +48,14 @@ class UserController {
         const user = await User.create({
             email,
             password: hashPassword,
-            role,
+            role: 'USER',
             phone,
-            discount,
+            discount: 0,
             firstName,
             secondName,
-            clientRating,
+            clientRating: 0,
             dateOfBirthsday,
+            favouriteBeer,
         });
         // Создаем для пользователя корзину
         const basket = await Basket.create({ userId: user.id });

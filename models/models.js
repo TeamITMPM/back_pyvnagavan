@@ -13,6 +13,7 @@ const User = sequelize.define('user', {
     clientRating: { type: DataTypes.TINYINT, defaultValue: 0 },
     discount: { type: DataTypes.TINYINT, defaultValue: 0 },
     role: { type: DataTypes.STRING, defaultValue: 'USER' },
+    favouriteBeer: { type: DataTypes.STRING },
 });
 
 const Basket = sequelize.define('basket', {
