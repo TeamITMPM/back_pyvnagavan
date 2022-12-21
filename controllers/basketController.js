@@ -14,10 +14,6 @@ class BasketController {
         return res.json(basketResponse);
     }
 
-    // async get(req, res) {
-    //     const basketResponse = await BasketItem.findAll();
-    //     return res.json(basketResponse);
-    // }
     async getOne(req, res) {
         const { basketId } = req.params;
 
@@ -29,13 +25,16 @@ class BasketController {
         return res.json(basketResponse);
     }
 
-    async update(req, res) {
-        // const fileName = FileService.saveFile(picture, post.body.nickname);
-        // const updatedPost = await Post.findByIdAndUpdate(post.params.id, {
-        //     ...post.body,
-        //     picture: fileName,
-        // });
-        // return updatedPost;
+    async delete(req, res) {
+        const { id } = req.params;
+
+        const basketResponse = await BasketItem.destroy({
+            where: {
+                id,
+            },
+        });
+
+        return res.json(basketResponse);
     }
 }
 
