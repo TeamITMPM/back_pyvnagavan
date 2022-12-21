@@ -3,13 +3,29 @@ const ApiError = require('../error/ApiError');
 
 class BasketController {
     async create(req, res) {
-        // const { name } = req.body;
-        // const basketResponse = await BasketItem.create({ name });
-        // return res.json(brand);
+        const { basketId } = req.params;
+        const { itemId, quantity } = req.body;
+
+        const basketResponse = await BasketItem.create({
+            basketId,
+            itemId,
+            quantity,
+        });
+        return res.json(basketResponse);
     }
 
-    async get(req, res) {
-        const basketResponse = await BasketItem.findAll();
+    // async get(req, res) {
+    //     const basketResponse = await BasketItem.findAll();
+    //     return res.json(basketResponse);
+    // }
+    async getOne(req, res) {
+        const { basketId } = req.params;
+
+        const basketResponse = await BasketItem.findAll({
+            where: {
+                basketId: basketId,
+            },
+        });
         return res.json(basketResponse);
     }
 

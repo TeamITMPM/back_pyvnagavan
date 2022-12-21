@@ -1,6 +1,6 @@
 const sequelize = require('../db');
 // Класс с помощу которого описываются типы того или инного поня
-const { DataTypes } = require('sequelize');
+const { DataTypes, TEXT } = require('sequelize');
 // Описываем модель пользователя
 const User = sequelize.define('user', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -22,6 +22,7 @@ const Basket = sequelize.define('basket', {
 
 const BasketItem = sequelize.define('basket_item', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    quantity: { type: DataTypes.TEXT },
 });
 
 const Item = sequelize.define('item', {

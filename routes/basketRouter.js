@@ -4,13 +4,13 @@ const basketController = require('../controllers/basketController');
 const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/item', authMiddleware, userController.check);
-router.put('/item', authMiddleware, userController.check);
+router.post('/item/:basketId', authMiddleware, basketController.create);
+router.put('/item/:basketId', authMiddleware);
 router.get(
-    '/item',
-    // authMiddleware,
+    '/item/:basketId',
+    authMiddleware,
     // userController.check,
-    basketController.get,
+    basketController.getOne,
 );
 
 module.exports = router;
