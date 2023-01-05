@@ -3,10 +3,34 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User, Basket } = require('../models/models');
 
-const generateJwt = (id, email, role) => {
-    return jwt.sign({ id, email, role }, process.env.SECRET_KEY, {
-        expiresIn: '24h',
-    });
+const generateJwt = (
+    id,
+    email,
+    role,
+    phone,
+    firstName,
+    secondName,
+    dateOfBirthsday,
+    d0iscount,
+    favouriteBeer,
+) => {
+    return jwt.sign(
+        {
+            id,
+            email,
+            role,
+            phone,
+            firstName,
+            secondName,
+            dateOfBirthsday,
+            d0iscount,
+            favouriteBeer,
+        },
+        process.env.SECRET_KEY,
+        {
+            expiresIn: '24h',
+        },
+    );
 };
 
 class UserController {
@@ -59,7 +83,17 @@ class UserController {
         });
         // Создаем для пользователя корзину
         const basket = await Basket.create({ userId: user.id });
-        const token = generateJwt(user.id, user.email, user.role);
+        const token = generateJwt(
+            user.id,
+            user.email,
+            user.role,
+            user.phone,
+            user.firstName,
+            user.secondName,
+            user.dateOfBirthsday,
+            user.d0iscount,
+            user.favouriteBeer,
+        );
 
         return res.json({ token });
         // return res.json(user);
@@ -76,11 +110,34 @@ class UserController {
         if (!comparePassword) {
             return next(ApiError.internal('Не вірний пароль =('));
         }
-        const token = generateJwt(user.id, user.email, user.role);
+        const token = generateJwt(
+            user.id,
+            user.email,
+            user.role,
+            user.phone,
+            user.firstName,
+            user.secondName,
+            user.dateOfBirthsday,
+            user.d0iscount,
+            user.favouriteBeer,
+        );
         return res.json({ token });
     }
     async check(req, res, next) {
-        const token = generateJwt(req.user.id, req.user.email, req.user.role);
+        const token = generateJwt(
+            req.user.id,
+            req.user.email,
+            req.user.role,
+            req.user.id,
+            req.user.email,
+            req.user.role,
+            req.user.phone,
+            req.user.firstName,
+            req.user.secondName,
+            req.user.dateOfBirthsday,
+            req.user.d0iscount,
+            req.user.favouriteBeer,
+        );
         return res.json({ token });
         // res.json({ message: 'worcking' });
     }
