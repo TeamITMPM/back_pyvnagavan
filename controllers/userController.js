@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { User, Basket } = require('../models/models');
 
 const generateJwt = (
+    basketId,
     id,
     email,
     role,
@@ -11,11 +12,12 @@ const generateJwt = (
     firstName,
     secondName,
     dateOfBirthsday,
-    d0iscount,
+    discount,
     favouriteBeer,
 ) => {
     return jwt.sign(
         {
+            basketId,
             id,
             email,
             role,
@@ -23,7 +25,7 @@ const generateJwt = (
             firstName,
             secondName,
             dateOfBirthsday,
-            d0iscount,
+            discount,
             favouriteBeer,
         },
         process.env.SECRET_KEY,
@@ -60,9 +62,7 @@ class UserController {
 
         if (candidate) {
             return next(
-                ApiError.badRequest(
-                    'Пользователь с таким email уже существует',
-                ),
+                ApiError.badRequest('Користувач з таким email вже існує'),
             );
         }
         // Хешируем пароль
@@ -83,7 +83,13 @@ class UserController {
         });
         // Создаем для пользователя корзину
         const basket = await Basket.create({ userId: user.id });
+        const basketID = await Basket.findOne({
+            where: {
+                userId: user.id,
+            },
+        });
         const token = generateJwt(
+            basketID.id,
             user.id,
             user.email,
             user.role,
@@ -91,7 +97,7 @@ class UserController {
             user.firstName,
             user.secondName,
             user.dateOfBirthsday,
-            user.d0iscount,
+            user.discount,
             user.favouriteBeer,
         );
 
@@ -110,7 +116,14 @@ class UserController {
         if (!comparePassword) {
             return next(ApiError.internal('Не вірний пароль =('));
         }
+        const basketID = await Basket.findOne({
+            where: {
+                userId: user.id,
+            },
+        });
+
         const token = generateJwt(
+            basketID.id,
             user.id,
             user.email,
             user.role,
@@ -118,13 +131,19 @@ class UserController {
             user.firstName,
             user.secondName,
             user.dateOfBirthsday,
-            user.d0iscount,
+            user.discount,
             user.favouriteBeer,
         );
         return res.json({ token });
     }
     async check(req, res, next) {
+        const basketID = await Basket.findOne({
+            where: {
+                userId: user.id,
+            },
+        });
         const token = generateJwt(
+            basketID.id,
             req.user.id,
             req.user.email,
             req.user.role,
@@ -135,7 +154,7 @@ class UserController {
             req.user.firstName,
             req.user.secondName,
             req.user.dateOfBirthsday,
-            req.user.d0iscount,
+            req.user.discount,
             req.user.favouriteBeer,
         );
         return res.json({ token });
