@@ -5,7 +5,6 @@ class BasketController {
     async create(req, res) {
         const { basketId } = req.params;
         const { itemId, quantity } = req.body;
-        console.log('RRRRRRRRRRRRRRRRRR', req.body.token);
 
         const basketResponse = await BasketItem.create({
             basketId,
@@ -23,6 +22,8 @@ class BasketController {
                 basketId: basketId,
             },
         });
+
+        console.log('basketResponse>>>>>', basketResponse);
         return res.json(basketResponse);
     }
 
