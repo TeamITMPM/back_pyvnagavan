@@ -1,4 +1,5 @@
-const { BasketItem } = require('../models/models');
+const { BasketItem, Item, ItemInfo } = require('../models/models');
+
 const ApiError = require('../error/ApiError');
 
 class BasketController {
@@ -23,8 +24,26 @@ class BasketController {
             },
         });
 
-        console.log('basketResponse>>>>>', basketResponse);
-        return res.json(basketResponse);
+        const allItem = await Item.findAll({
+            include: [{ model: ItemInfo, as: 'info' }],
+        });
+
+        const finalBasketResponse = basketResponse.map(cartItem => {
+            // console.log(cartItem);
+            const product = allItem.find(item => {
+                return item.dataValues.id === cartItem.itemId;
+            });
+
+            if (product) {
+                return {
+                    ...cartItem,
+                    metaData: product,
+                };
+            }
+            return cartItem;
+        });
+
+        return res.json(finalBasketResponse);
     }
 
     async delete(req, res) {
