@@ -29,7 +29,6 @@ class BasketController {
         });
 
         const finalBasketResponse = basketResponse.map(cartItem => {
-            // console.log(cartItem);
             const product = allItem.find(item => {
                 return item.dataValues.id === cartItem.itemId;
             });
@@ -37,13 +36,25 @@ class BasketController {
             if (product) {
                 return {
                     ...cartItem,
-                    metaData: product,
+                    product,
                 };
             }
             return cartItem;
         });
 
-        return res.json(finalBasketResponse);
+        let totalPrice = 0;
+
+        finalBasketResponse.map(data => {
+            const { quantity } = data.dataValues;
+            const { price } = data.product;
+
+            return (totalPrice += quantity * price);
+        });
+
+        let pizza = [];
+        pizza.push(finalBasketResponse);
+        pizza.push([{ totalPrice: totalPrice }]);
+        return res.json(pizza);
     }
 
     async delete(req, res) {
