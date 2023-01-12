@@ -51,10 +51,10 @@ class BasketController {
             return (totalPrice += quantity * price);
         });
 
-        let pizza = [];
-        pizza.push(finalBasketResponse);
-        pizza.push([{ totalPrice: totalPrice }]);
-        return res.json(pizza);
+        let lastFinalBasketResponse = [];
+        lastFinalBasketResponse.push(finalBasketResponse);
+        lastFinalBasketResponse.push([totalPrice]);
+        return res.json(lastFinalBasketResponse);
     }
 
     async delete(req, res) {
