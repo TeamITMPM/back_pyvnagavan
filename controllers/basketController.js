@@ -15,7 +15,7 @@ class BasketController {
         return res.json(basketResponse);
     }
 
-    async getOne(req, res) {
+    async getAll(req, res) {
         const { basketId } = req.params;
 
         const basketResponse = await BasketItem.findAll({
@@ -58,15 +58,56 @@ class BasketController {
     }
 
     async delete(req, res) {
-        const { id } = req.params;
+        const { basketId } = req.params;
 
-        const basketResponse = await BasketItem.destroy({
+        const { id } = req.body;
+
+        const basketResponse1 = await BasketItem.destroy({
             where: {
                 id,
             },
         });
 
-        return res.json(basketResponse);
+        const basketResponse = await BasketItem.findAll({
+            where: {
+                basketId: basketId,
+            },
+        });
+
+        const allItem = await Item.findAll({
+            include: [{ model: ItemInfo, as: 'info' }],
+        });
+
+        const finalBasketResponse = basketResponse.map(cartItem => {
+            const product = allItem.find(item => {
+                return item.dataValues.id === cartItem.itemId;
+            });
+
+            if (product) {
+                return {
+                    ...cartItem,
+                    product,
+                };
+            }
+            return cartItem;
+        });
+
+        let totalPrice = 0;
+
+        finalBasketResponse.map(data => {
+            const { quantity } = data.dataValues;
+            const { price } = data.product;
+
+            return (totalPrice += quantity * price);
+        });
+
+        let lastFinalBasketResponse = [];
+        lastFinalBasketResponse.push(finalBasketResponse);
+        lastFinalBasketResponse.push([totalPrice]);
+
+        console.log('basketId>>>>>>>>>>', basketId);
+
+        return res.json(lastFinalBasketResponse);
     }
 }
 

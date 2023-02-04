@@ -5,12 +5,12 @@ const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/item/:basketId', authMiddleware, basketController.create);
-router.delete('/item/:id', authMiddleware, basketController.delete);
+router.delete('/item/:basketId', authMiddleware, basketController.delete);
 router.get(
     '/item/:basketId',
     authMiddleware,
     // userController.check,
-    basketController.getOne,
+    basketController.getAll,
 );
 
 module.exports = router;

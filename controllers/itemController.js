@@ -43,7 +43,7 @@ class ItemController {
     async getAll(req, res) {
         let { brandId, typeId, limit, page } = req.query;
         page = Number(page) || 1;
-        limit = Number(limit) || 9;
+        limit = Number(limit) || 12;
 
         let offset = page * limit - limit;
         let item;
