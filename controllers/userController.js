@@ -139,7 +139,7 @@ class UserController {
     async check(req, res, next) {
         const basketID = await Basket.findOne({
             where: {
-                userId: user.id,
+                userId: req.user.id,
             },
         });
         const token = generateJwt(
