@@ -105,8 +105,6 @@ class BasketController {
         lastFinalBasketResponse.push(finalBasketResponse);
         lastFinalBasketResponse.push([totalPrice]);
 
-        console.log('basketId>>>>>>>>>>', basketId);
-
         return res.json(lastFinalBasketResponse);
     }
 }

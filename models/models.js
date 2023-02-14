@@ -60,26 +60,33 @@ const TypeBrand = sequelize.define('type_brand', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 
-// const Order = sequelize.define('order', {
-//     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//     firstName: { type: DataTypes.STRING },
-//     phone: { type: DataTypes.STRING },
-//     email: { type: DataTypes.STRING, unique: true },
-//     street: { type: DataTypes.STRING },
-//     house: { type: DataTypes.STRING },
-//     apartment: { type: DataTypes.STRING },
-//     code: { type: DataTypes.STRING },
-//     floor: { type: DataTypes.TINYINT },
-//     comments: { type: DataTypes.STRING },
-//     restaurant: { type: DataTypes.STRING },
-//     date: { type: DataTypes.DATEONLY },
-//     time: { type: DataTypes.DATETIME },
-//     asap: { type: DataTypes.BOOLEAN },
-//     voucher: { type: DataTypes.STRING },
-//     change: { type: DataTypes.FLOAT },
-//     noChange: { type: DataTypes.BOOLEAN },
-//     payment: { type: DataTypes.ENUM, values: ['cash', 'card'] },
-// });
+const Order = sequelize.define('order', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+
+    firstName: { type: DataTypes.STRING },
+    phone: { type: DataTypes.STRING },
+    email: { type: DataTypes.STRING },
+    street: { type: DataTypes.STRING },
+    house: { type: DataTypes.STRING },
+    apartment: { type: DataTypes.STRING },
+    code: { type: DataTypes.STRING },
+    floor: { type: DataTypes.TINYINT },
+    comments: { type: DataTypes.STRING },
+    restaurant: { type: DataTypes.STRING },
+    date: { type: DataTypes.DATEONLY },
+    time: { type: DataTypes.TIME },
+    asap: { type: DataTypes.BOOLEAN },
+    voucher: { type: DataTypes.STRING },
+    change: { type: DataTypes.DECIMAL(10, 2) },
+    noChange: { type: DataTypes.BOOLEAN },
+    payment: { type: DataTypes.ENUM('Cash', 'Credit Card', 'Online Payment') },
+    status: { type: DataTypes.STRING },
+});
+
+const OrderItem = sequelize.define('order_item', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    quantity: { type: DataTypes.TEXT },
+});
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
@@ -108,6 +115,15 @@ ItemInfo.belongsTo(Item);
 Type.belongsToMany(Brand, { through: TypeBrand });
 Brand.belongsToMany(Type, { through: TypeBrand });
 
+// OrderItem.hasMany(Order);
+// Order.belongsTo(OrderItem);
+
+Item.hasMany(OrderItem);
+OrderItem.belongsTo(Item);
+
+Order.hasMany(OrderItem);
+OrderItem.belongsTo(Order);
+
 module.exports = {
     User,
     Basket,
@@ -118,5 +134,6 @@ module.exports = {
     Rating,
     TypeBrand,
     ItemInfo,
-    // Order,
+    Order,
+    OrderItem,
 };
