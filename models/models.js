@@ -81,11 +81,14 @@ const Order = sequelize.define('order', {
     noChange: { type: DataTypes.BOOLEAN },
     payment: { type: DataTypes.ENUM('Cash', 'Credit Card', 'Online Payment') },
     status: { type: DataTypes.STRING },
+    basketId: { type: DataTypes.STRING },
 });
 
 const OrderItem = sequelize.define('order_item', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     quantity: { type: DataTypes.TEXT },
+    basketId: { type: DataTypes.INTEGER },
+    itemId: { type: DataTypes.INTEGER },
 });
 
 User.hasOne(Basket);
