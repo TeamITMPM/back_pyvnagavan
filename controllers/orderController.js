@@ -125,24 +125,25 @@ class OrderController {
 
     async getById(req, res) {
         const { basketId } = req.params;
-        // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>', basketId);
-        const itemInOrder = await OrderItem.findAll({
+
+        const orders = await Order.findAll({
             where: {
                 basketId: basketId,
             },
         });
 
-        const order = await Order.findAll({
-            where: {
-                basketId: basketId,
-            },
-        });
+        let result = await Promise.all(
+            orders.map(async order => {
+                const orderItems = await OrderItem.findAll({
+                    where: {
+                        orderId: order.id,
+                    },
+                });
+                return [order, ...orderItems];
+            }),
+        );
 
-        let response = [];
-        response.push(...order);
-        response.push(itemInOrder);
-
-        return res.json(response);
+        return res.json(result);
     }
 }
 
