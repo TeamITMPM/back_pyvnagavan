@@ -82,6 +82,7 @@ const Order = sequelize.define('order', {
     payment: { type: DataTypes.ENUM('Cash', 'Credit Card', 'Online Payment') },
     status: { type: DataTypes.STRING },
     basketId: { type: DataTypes.STRING },
+    price: { type: DataTypes.STRING },
 });
 
 const OrderItem = sequelize.define('order_item', {

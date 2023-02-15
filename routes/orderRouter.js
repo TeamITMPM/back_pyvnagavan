@@ -5,6 +5,8 @@ const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/create', authMiddleware, orderController.create);
+router.post('/:basketId', authMiddleware, orderController.getById);
+
 // router.delete('/item/:basketId', authMiddleware, basketController.delete);
 // router.get(
 //     '/item/:basketId',
