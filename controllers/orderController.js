@@ -125,44 +125,24 @@ class OrderController {
 
     async getById(req, res) {
         const { basketId } = req.params;
-
-        const basketResponse = await BasketItem.findAll({
+        // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>', basketId);
+        const itemInOrder = await OrderItem.findAll({
             where: {
                 basketId: basketId,
             },
         });
 
-        const allItem = await Item.findAll({
-            include: [{ model: ItemInfo, as: 'info' }],
+        const order = await Order.findAll({
+            where: {
+                basketId: basketId,
+            },
         });
 
-        const finalBasketResponse = basketResponse.map(cartItem => {
-            const product = allItem.find(item => {
-                return item.dataValues.id === cartItem.itemId;
-            });
+        let response = [];
+        response.push(...order);
+        response.push(itemInOrder);
 
-            if (product) {
-                return {
-                    ...cartItem,
-                    product,
-                };
-            }
-            return cartItem;
-        });
-
-        let totalPrice = 0;
-
-        finalBasketResponse.map(data => {
-            const { quantity } = data.dataValues;
-            const { price } = data.product;
-
-            return (totalPrice += quantity * price);
-        });
-
-        let lastFinalBasketResponse = [];
-        lastFinalBasketResponse.push(finalBasketResponse);
-        lastFinalBasketResponse.push([totalPrice]);
-        return res.json(lastFinalBasketResponse);
+        return res.json(response);
     }
 }
 
