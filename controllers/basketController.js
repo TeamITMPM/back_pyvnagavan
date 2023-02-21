@@ -62,7 +62,7 @@ class BasketController {
 
         const { id } = req.body;
 
-        const basketResponse1 = await BasketItem.destroy({
+        await BasketItem.destroy({
             where: {
                 id,
             },

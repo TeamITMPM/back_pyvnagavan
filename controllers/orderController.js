@@ -117,6 +117,21 @@ class OrderController {
             response.push(createOrder);
             response.push(...result);
 
+            const basketToDelete = await BasketItem.findAll({
+                where: {
+                    basketId: basketId,
+                },
+            });
+
+            console.log('basketToDelete', basketToDelete);
+
+            if (basketToDelete.length > 0) {
+                await BasketItem.destroy({
+                    where: {
+                        basketId: basketId,
+                    },
+                });
+            }
             return res.json(response);
         } catch (err) {
             console.log(err);
