@@ -30,8 +30,9 @@ class OrderController {
                 change,
                 noChange,
                 payment,
-                basketId,
             } = req.body;
+
+            const { basketId } = req.params;
 
             const itemInBasket = await BasketItem.findAll({
                 where: {
