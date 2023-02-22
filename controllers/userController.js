@@ -163,41 +163,50 @@ class UserController {
     async editUserInfo(req, res, next) {
         const { phone, firstName, secondName, dateOfBirthsday, favouriteBeer } =
             req.body;
+        const userId = req.params.userId; // or however you're passing in the user ID
 
-        // Создаем пользователя
-        const user = await User.create({
-            email,
-            password: hashPassword,
-            role: 'USER',
-            phone,
-            discount: 0,
-            firstName,
-            secondName,
-            clientRating: 0,
-            dateOfBirthsday,
-            favouriteBeer,
-        });
-        // Создаем для пользователя корзину
-        const basket = await Basket.create({ userId: user.id });
-        const basketID = await Basket.findOne({
-            where: {
-                userId: user.id,
-            },
-        });
-        const token = generateJwt(
-            basketID.id,
-            user.id,
-            user.email,
-            user.role,
-            user.phone,
-            user.firstName,
-            user.secondName,
-            user.dateOfBirthsday,
-            user.discount,
-            user.favouriteBeer,
-        );
+        try {
+            // Find the existing user
+            const user = await User.findByPk(userId);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
 
-        return res.json({ token });
+            // Update the user's information
+            user.phone = phone;
+            user.firstName = firstName;
+            user.secondName = secondName;
+            user.dateOfBirthsday = dateOfBirthsday;
+            user.favouriteBeer = favouriteBeer;
+
+            // Save the updated user to the database
+            await user.save();
+
+            // Generate a new JWT with the updated user information
+            const basketID = await Basket.findOne({
+                where: {
+                    userId: user.id,
+                },
+            });
+            const token = generateJwt(
+                basketID.id,
+                user.id,
+                user.email,
+                user.role,
+                user.phone,
+                user.firstName,
+                user.secondName,
+                user.dateOfBirthsday,
+                user.discount,
+                user.favouriteBeer,
+            );
+
+            return res.json({ token });
+        } catch (error) {
+            return res
+                .status(500)
+                .json({ message: 'Error updating user information' });
+        }
     }
 }
 
