@@ -123,8 +123,6 @@ class OrderController {
                 },
             });
 
-            console.log('basketToDelete', basketToDelete);
-
             if (basketToDelete.length > 0) {
                 await BasketItem.destroy({
                     where: {
@@ -149,13 +147,13 @@ class OrderController {
         });
 
         let result = await Promise.all(
-            orders.map(async order => {
+            orders.map(async orderInfo => {
                 const orderItems = await OrderItem.findAll({
                     where: {
-                        orderId: order.id,
+                        orderId: orderInfo.id,
                     },
                 });
-                return [order, ...orderItems];
+                return { orderInfo, items: orderItems };
             }),
         );
 

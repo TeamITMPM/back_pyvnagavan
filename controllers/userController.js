@@ -102,7 +102,6 @@ class UserController {
         );
 
         return res.json({ token });
-        // return res.json(user);
     }
 
     async login(req, res, next) {
@@ -159,6 +158,46 @@ class UserController {
         );
         return res.json({ token });
         // res.json({ message: 'worcking' });
+    }
+
+    async editUserInfo(req, res, next) {
+        const { phone, firstName, secondName, dateOfBirthsday, favouriteBeer } =
+            req.body;
+
+        // Создаем пользователя
+        const user = await User.create({
+            email,
+            password: hashPassword,
+            role: 'USER',
+            phone,
+            discount: 0,
+            firstName,
+            secondName,
+            clientRating: 0,
+            dateOfBirthsday,
+            favouriteBeer,
+        });
+        // Создаем для пользователя корзину
+        const basket = await Basket.create({ userId: user.id });
+        const basketID = await Basket.findOne({
+            where: {
+                userId: user.id,
+            },
+        });
+        const token = generateJwt(
+            basketID.id,
+            user.id,
+            user.email,
+            user.role,
+            user.phone,
+            user.firstName,
+            user.secondName,
+            user.dateOfBirthsday,
+            user.discount,
+            user.favouriteBeer,
+        );
+
+        return res.json({ token });
     }
 }
 
