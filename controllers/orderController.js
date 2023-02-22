@@ -137,27 +137,54 @@ class OrderController {
         }
     }
 
-    async getById(req, res) {
-        const { basketId } = req.params;
+    async getById(req, res, next) {
+        try {
+            const { basketId } = req.params;
 
-        const orders = await Order.findAll({
-            where: {
-                basketId: basketId,
-            },
-        });
+            const orders = await Order.findAll({
+                where: {
+                    basketId: basketId,
+                },
+            });
 
-        let result = await Promise.all(
-            orders.map(async orderInfo => {
-                const orderItems = await OrderItem.findAll({
-                    where: {
-                        orderId: orderInfo.id,
-                    },
-                });
-                return { orderInfo, items: orderItems };
-            }),
-        );
+            let result = await Promise.all(
+                orders.map(async orderInfo => {
+                    const orderItems = await OrderItem.findAll({
+                        where: {
+                            orderId: orderInfo.id, // use the order ID to filter the order items
+                        },
+                    });
 
-        return res.json(result);
+                    const allItems = await Item.findAll({
+                        include: [{ model: ItemInfo, as: 'info' }],
+                    });
+
+                    const finalOrderItems = orderItems.map(orderItem => {
+                        const product = allItems.find(item => {
+                            return item.dataValues.id === orderItem.itemId;
+                        });
+
+                        if (product) {
+                            return {
+                                ...orderItem.dataValues,
+                                product,
+                            };
+                        }
+                        return orderItem;
+                    });
+
+                    return {
+                        orderInfo: orderInfo.dataValues,
+                        items: finalOrderItems,
+                    };
+                }),
+            );
+
+            return res.json(result);
+        } catch (error) {
+            next(ApiError.internal(e.message));
+            console.log(e);
+        }
     }
 }
 
