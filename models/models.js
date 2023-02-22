@@ -73,15 +73,16 @@ const Order = sequelize.define('order', {
     floor: { type: DataTypes.TINYINT },
     comments: { type: DataTypes.STRING },
     restaurant: { type: DataTypes.STRING },
-    date: { type: DataTypes.DATEONLY },
-    time: { type: DataTypes.TIME },
-    asap: { type: DataTypes.BOOLEAN },
+    date: { type: DataTypes.STRING },
+    time: { type: DataTypes.STRING },
+    asap: { type: DataTypes.STRING },
     voucher: { type: DataTypes.STRING },
-    change: { type: DataTypes.DECIMAL(10, 2) },
-    noChange: { type: DataTypes.BOOLEAN },
-    payment: { type: DataTypes.ENUM('Cash', 'Credit Card', 'Online Payment') },
+    change: { type: DataTypes.STRING },
+    noChange: { type: DataTypes.STRING },
+    payment: { type: DataTypes.STRING },
     status: { type: DataTypes.STRING },
     basketId: { type: DataTypes.STRING },
+    price: { type: DataTypes.STRING },
 });
 
 const OrderItem = sequelize.define('order_item', {
