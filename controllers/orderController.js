@@ -7,6 +7,7 @@ const {
 } = require('../models/models');
 
 const ApiError = require('../error/ApiError');
+const { orderNotification } = require('../services/telegramBot');
 
 class OrderController {
     async create(req, res) {
@@ -113,9 +114,13 @@ class OrderController {
 
             let result = await Promise.all(data);
 
-            let response = [];
-            response.push(createOrder);
-            response.push(...result);
+            console.log(
+                '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createOrder',
+                createOrder.dataValues,
+            );
+            let response = { orderInfo: createOrder.dataValues, items: result };
+            // response.push(createOrder);
+            // response.push(...result);
 
             const basketToDelete = await BasketItem.findAll({
                 where: {
@@ -130,6 +135,7 @@ class OrderController {
                     },
                 });
             }
+            orderNotification(response);
             return res.json(response);
         } catch (err) {
             console.log(err);
