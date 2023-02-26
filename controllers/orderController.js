@@ -116,8 +116,6 @@ class OrderController {
                 orderInfo: createOrder.dataValues,
                 items: finalBasketResponse,
             };
-            response.push(createOrder);
-            response.push(...result);
 
             const basketToDelete = await BasketItem.findAll({
                 where: {
