@@ -29,7 +29,7 @@ function orderNotification({ orderInfo, items }) {
 
     // const{}=items
     const text = '123';
-    const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`;
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${text}`;
     axios
         .post(url)
         .then(() => {
