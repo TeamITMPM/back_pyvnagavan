@@ -26,7 +26,7 @@ function orderNotification({ orderInfo, items }) {
         basketId,
         price,
     } = orderInfo;
-    let itemsData = [`-------Замовлення №${id}-------`];
+    let itemsData = [`-- Замовлення №${id} Кошик --`];
     items.map(item => {
         const { quantity } = item;
         const { name, price } = item.product.dataValues;
@@ -34,32 +34,34 @@ function orderNotification({ orderInfo, items }) {
         // const {quantity}= product.dataValues
         // console.log("product>>>>>>>>>>>>>>", product.dataValues);
         itemsData.push(
-            `**%0A${name}** | Кількість:${quantity} по ціні:__${price}__ за од/тов`
+            `%0A<b>${name}</b>%0A     К:${quantity} Ц:<i>${price}</i> за од/тов`,
         );
     });
+    itemsData.push(`%0A-----------------------%0AДо сплати:${price}`)
+
     let deliveryInfo = `
-    -------Замовлення №${id}-------%0A
-    ** Ім'я: ** ${firstName},%0A
-    **Телефон:** ${phone},%0A
-    **email:** ${email},%0A
-    **Вулиця:** ${street},%0A
-    **Будинок:** ${house},%0A
-    **Квартира:** ${apartment},%0A
-    **Код домофону:** ${code},%0A
-    **Поверх:** ${floor},%0A
-    **Коментар:** ${comments},%0A
-    **Ресторан:** ${restaurant},%0A
-    **Дата доставки:** ${date},%0A
-    **Час доставки:** ${time},%0A
-    ${asap ? '**якнайшвидше**, %0A' : ''}
-    **Купон:** ${voucher},%0A
-    **Здача з:** ${change},%0A
-    **Без здачі:** ${noChange},%0A
-    **Оплата:** ${payment} `;
+    -- Замовлення №${id} Інформація --%0A
+    <b> Ім'я: </b> <i>${firstName}</i>,%0A
+    <b> Телефон: </b> <i>${phone}</i>,%0A
+    <b> email: </b> <i>${email}</i>,%0A
+    <b> Вулиця: </b> <i>${street}</i>,%0A
+    <b> Будинок: </b> <i>${house}</i>,%0A
+    <b> Квартира: </b> <i>${apartment}</i>,%0A
+    <b> Код домофону: </b> <i>${code}</i>,%0A
+    <b> Поверх: </b> <i>${floor}</i>,%0A
+    <b> Коментар: </b> <i>${comments}</i>,%0A
+    <b> Ресторан: </b> <i>${restaurant}</i>,%0A
+    <b> Дата доставки: </b> <i>${date}</i>,%0A
+    <b> Час доставки: </b> <i>${time}</i>,%0A
+    ${asap ? '<b> якнайшвидше </b>, %0A' : ''}
+    <b> Купон: </b> <i>${voucher}</i>,%0A
+    <b> Здача з: </b> <i>${change}</i>,%0A
+    <b> Без здачі: </b> <i>${noChange}</i>,%0A
+    <b> Оплата: </b> <i>${payment} грн</i> `;
 
     // const{}=items
-    const messageOrderInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${itemsData}%0AДо сплати:${price}`;
-    const messageDeliveryInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${deliveryInfo}`;
+    const messageOrderInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&parse_mode=HTML&text=${itemsData}`;
+    const messageDeliveryInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&parse_mode=HTML&text=${deliveryInfo}`;
     axios
         .post(messageOrderInfo)
         .then(() => {
