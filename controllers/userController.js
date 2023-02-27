@@ -1,4 +1,5 @@
 const ApiError = require('../error/ApiError');
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User, Basket } = require('../models/models');
@@ -105,16 +106,23 @@ class UserController {
     }
 
     async login(req, res, next) {
-        const { email, password } = req.body;
-        const user = await User.findOne({ where: { email } });
+        const { identifier, password } = req.body;
+        const user = await User.findOne({
+            where: {
+                [Op.or]: [{ email: identifier }, { phone: identifier }],
+            },
+        });
+
         if (!user) {
             return next(ApiError.internal('Такого користувача не існує =('));
         }
+
         // Сравниваем пароли
         let comparePassword = bcrypt.compareSync(password, user.password);
         if (!comparePassword) {
             return next(ApiError.internal('Не вірний пароль =('));
         }
+
         const basketID = await Basket.findOne({
             where: {
                 userId: user.id,
@@ -135,6 +143,7 @@ class UserController {
         );
         return res.json({ token });
     }
+
     async check(req, res, next) {
         const basketID = await Basket.findOne({
             where: {
