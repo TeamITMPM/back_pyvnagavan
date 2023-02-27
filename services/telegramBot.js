@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { TELEGRAM_BOT_TOKEN } = process.env;
 
-const chatId = '229489966';
+const chatId = '-718374537';
 
 function orderNotification({ orderInfo, items }) {
     const {
@@ -26,7 +26,7 @@ function orderNotification({ orderInfo, items }) {
         basketId,
         price,
     } = orderInfo;
-    let itemsData = [];
+    let itemsData = [`-------Замовлення №${id}-------`];
     items.map(item => {
         const { quantity } = item;
         const { name, price } = item.product.dataValues;
@@ -34,29 +34,31 @@ function orderNotification({ orderInfo, items }) {
         // const {quantity}= product.dataValues
         // console.log("product>>>>>>>>>>>>>>", product.dataValues);
         itemsData.push(
-            `${name} | Кількість:${quantity} по ціні:${price} за од/тов `,
+            `**%0A${name}** | Кількість:${quantity} по ціні:__${price}__ за од/тов`
         );
     });
-    let deliveryInfo = `Ім'я:${firstName},
-    Телефон: ${phone},
-    email: ${email},
-    Вулиця: ${street},
-    Будинок: ${house},
-    Квартира ${apartment},
-    Код домофону: ${code},
-    Поверх: ${floor},
-    Коментар: ${comments},
-    Ресторан: ${restaurant},
-    Дата доставки: ${date},
-    Час доставки: ${time},
-    ${asap? "якнайшвидше," : ""}
-    Купон: ${voucher},
-    Здача з: ${change},
-    Без здачі: ${noChange},
-    Оплата: ${payment} `;
+    let deliveryInfo = `
+    -------Замовлення №${id}-------%0A
+    ** Ім'я: ** ${firstName},%0A
+    **Телефон:** ${phone},%0A
+    **email:** ${email},%0A
+    **Вулиця:** ${street},%0A
+    **Будинок:** ${house},%0A
+    **Квартира:** ${apartment},%0A
+    **Код домофону:** ${code},%0A
+    **Поверх:** ${floor},%0A
+    **Коментар:** ${comments},%0A
+    **Ресторан:** ${restaurant},%0A
+    **Дата доставки:** ${date},%0A
+    **Час доставки:** ${time},%0A
+    ${asap ? '**якнайшвидше**, %0A' : ''}
+    **Купон:** ${voucher},%0A
+    **Здача з:** ${change},%0A
+    **Без здачі:** ${noChange},%0A
+    **Оплата:** ${payment} `;
 
     // const{}=items
-    const messageOrderInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${itemsData}. До сплати:${price}`;
+    const messageOrderInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${itemsData}%0AДо сплати:${price}`;
     const messageDeliveryInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${deliveryInfo}`;
     axios
         .post(messageOrderInfo)
