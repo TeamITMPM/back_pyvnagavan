@@ -7,6 +7,7 @@ const {
 } = require('../models/models');
 
 const ApiError = require('../error/ApiError');
+const { orderNotification } = require('../services/telegramBot');
 
 class OrderController {
     async create(req, res) {
@@ -43,15 +44,13 @@ class OrderController {
             const allItem = await Item.findAll({
                 include: [{ model: ItemInfo, as: 'info' }],
             });
-
             const finalBasketResponse = itemInBasket.map(cartItem => {
                 const product = allItem.find(item => {
                     return item.dataValues.id === cartItem.itemId;
                 });
-
                 if (product) {
                     return {
-                        ...cartItem,
+                        ...cartItem.dataValues,
                         product,
                     };
                 }
@@ -59,10 +58,11 @@ class OrderController {
                 return cartItem;
             });
 
+            console.log('finalBasketResponse>>>>>>>>', finalBasketResponse);
             let totalPrice = 0;
 
             finalBasketResponse.map(data => {
-                const { quantity } = data.dataValues;
+                const { quantity } = data;
                 const { price } = data.product;
 
                 return (totalPrice += quantity * price);
@@ -100,7 +100,8 @@ class OrderController {
                 throw new Error('No items found in the basket.');
             }
 
-            let data = itemInBasket.map(item => {
+            //Создаем записи в таблице order_items
+            itemInBasket.map(item => {
                 const { itemId, quantity } = item.dataValues;
 
                 return OrderItem.create({
@@ -111,11 +112,10 @@ class OrderController {
                 });
             });
 
-            let result = await Promise.all(data);
-
-            let response = [];
-            response.push(createOrder);
-            response.push(...result);
+            let response = {
+                orderInfo: createOrder.dataValues,
+                items: finalBasketResponse,
+            };
 
             const basketToDelete = await BasketItem.findAll({
                 where: {
@@ -130,6 +130,7 @@ class OrderController {
                     },
                 });
             }
+            orderNotification(response);
             return res.json(response);
         } catch (err) {
             console.log(err);

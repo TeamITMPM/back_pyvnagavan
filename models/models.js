@@ -92,6 +92,17 @@ const OrderItem = sequelize.define('order_item', {
     itemId: { type: DataTypes.INTEGER },
 });
 
+const Shop = sequelize.define('shop', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    schedule: { type: DataTypes.TEXT },
+    address: { type: DataTypes.TEXT },
+    img: { type: DataTypes.STRING, allowNull: false },
+});
+
+const ShopItem = sequelize.define('shop_item', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+});
+
 User.hasOne(Basket);
 Basket.belongsTo(User);
 
@@ -119,9 +130,6 @@ ItemInfo.belongsTo(Item);
 Type.belongsToMany(Brand, { through: TypeBrand });
 Brand.belongsToMany(Type, { through: TypeBrand });
 
-// OrderItem.hasMany(Order);
-// Order.belongsTo(OrderItem);
-
 Item.hasMany(OrderItem);
 OrderItem.belongsTo(Item);
 
@@ -140,4 +148,6 @@ module.exports = {
     ItemInfo,
     Order,
     OrderItem,
+    Shop,
+    ShopItem,
 };
