@@ -7,8 +7,16 @@ const ApiError = require('../error/ApiError');
 class ItemController {
     async create(req, res, next) {
         try {
-            const { name, price, brandId, typeId, oldPrice, promoPrice, info } =
-                req.body;
+            const {
+                nameUA,
+                nameENG,
+                price,
+                brandId,
+                typeId,
+                oldPrice,
+                promoPrice,
+                info,
+            } = req.body;
             const { img } = req.files;
             let fileName = uuid.v4() + '.jpg';
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
@@ -16,15 +24,18 @@ class ItemController {
                 info = JSON.parse(info);
                 info.forEach(i =>
                     ItemInfo.create({
-                        title: i.title,
-                        description: i.description,
+                        titleUA: i.titleUA,
+                        titleENG: i.titleENG,
+                        descriptionUA: i.descriptionUA,
+                        descriptionENG: i.descriptionENG,
                         deviceId: i.deviceId,
                     }),
                 );
             }
 
             const item = await Item.create({
-                name,
+                nameUA,
+                nameENG,
                 price,
                 brandId,
                 typeId,

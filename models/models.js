@@ -27,7 +27,8 @@ const BasketItem = sequelize.define('basket_item', {
 
 const Item = sequelize.define('item', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, unique: true, allowNull: false },
+    nameUA: { type: DataTypes.STRING, unique: true, allowNull: false },
+    nameENG: { type: DataTypes.STRING, unique: true, allowNull: false },
     price: { type: DataTypes.INTEGER, allowNull: false },
     oldPrice: { type: DataTypes.INTEGER, allowNull: false },
     promoPrice: { type: DataTypes.INTEGER, allowNull: false },
@@ -37,12 +38,14 @@ const Item = sequelize.define('item', {
 
 const Type = sequelize.define('type', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, unique: true, allowNull: false },
+    nameUA: { type: DataTypes.STRING, unique: true, allowNull: false },
+    nameENG: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
 const Brand = sequelize.define('brand', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, unique: true, allowNull: false },
+    nameUA: { type: DataTypes.STRING, unique: true, allowNull: false },
+    nameENG: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
 const Rating = sequelize.define('rating', {
@@ -52,8 +55,10 @@ const Rating = sequelize.define('rating', {
 
 const ItemInfo = sequelize.define('item_info', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    title: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING, allowNull: false },
+    titleUA: { type: DataTypes.STRING, allowNull: false },
+    titleENG: { type: DataTypes.STRING, allowNull: false },
+    descriptionUA: { type: DataTypes.STRING, allowNull: false },
+    descriptionENG: { type: DataTypes.STRING, allowNull: false },
 });
 
 const TypeBrand = sequelize.define('type_brand', {
@@ -94,7 +99,8 @@ const OrderItem = sequelize.define('order_item', {
 
 const Shop = sequelize.define('shop', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    address: { type: DataTypes.TEXT },
+    addressUA: { type: DataTypes.TEXT },
+    addressENG: { type: DataTypes.TEXT },
     schedule: { type: DataTypes.TEXT },
 });
 

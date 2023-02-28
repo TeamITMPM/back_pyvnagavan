@@ -6,8 +6,8 @@ const ApiError = require('../error/ApiError');
 class ShopController {
     async createShop(req, res, next) {
         try {
-            const { address, schedule } = req.body;
-            const shop = await Shop.create({ address, schedule });
+            const { addressUA, addressENG, schedule } = req.body;
+            const shop = await Shop.create({ addressUA, addressENG, schedule });
             return res.json(shop);
         } catch (e) {
             next(ApiError.badRequest(e.message));
