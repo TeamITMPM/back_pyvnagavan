@@ -26,7 +26,7 @@ function orderNotification({ orderInfo, items }) {
         basketId,
         price,
     } = orderInfo;
-    let itemsData = [`-- Замовлення №${id} Кошик --`];
+    let itemsData = [`<u>-- Замовлення №${id} Кошик --</u>`];
     items.map(item => {
         const { quantity } = item;
         const { name, price } = item.product.dataValues;
@@ -34,13 +34,13 @@ function orderNotification({ orderInfo, items }) {
         // const {quantity}= product.dataValues
         // console.log("product>>>>>>>>>>>>>>", product.dataValues);
         itemsData.push(
-            `%0A<b>${name}</b>%0A     К:${quantity} Ц:<i>${price}</i> за од/тов`,
+            `%0A    <b>${name}</b>%0A      К:${quantity} Ц:<i>${price}</i> за од/тов`,
         );
     });
-    itemsData.push(`%0A-----------------------%0AДо сплати:${price}`)
+    itemsData.push(`%0A-----------------------%0AДо сплати:${price} грн`)
 
     let deliveryInfo = `
-    -- Замовлення №${id} Інформація --%0A
+    <u>-- Замовлення №${id} Інформація --</u>%0A
     <b> Ім'я: </b> <i>${firstName}</i>,%0A
     <b> Телефон: </b> <i>${phone}</i>,%0A
     <b> email: </b> <i>${email}</i>,%0A
@@ -57,7 +57,7 @@ function orderNotification({ orderInfo, items }) {
     <b> Купон: </b> <i>${voucher}</i>,%0A
     <b> Здача з: </b> <i>${change}</i>,%0A
     <b> Без здачі: </b> <i>${noChange}</i>,%0A
-    <b> Оплата: </b> <i>${payment} грн</i> `;
+    <b> Оплата: </b> <i>${payment}</i> `;
 
     // const{}=items
     const messageOrderInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&parse_mode=HTML&text=${itemsData}`;
