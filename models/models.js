@@ -96,7 +96,6 @@ const Shop = sequelize.define('shop', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     address: { type: DataTypes.TEXT },
     schedule: { type: DataTypes.TEXT },
-    img: { type: DataTypes.STRING, allowNull: false },
 });
 
 const ShopItem = sequelize.define('shop_item', {
@@ -141,8 +140,6 @@ ShopItem.belongsTo(Shop);
 
 Item.hasMany(ShopItem);
 ShopItem.belongsTo(Item);
-
-
 
 module.exports = {
     User,
