@@ -33,6 +33,8 @@ const Item = sequelize.define('item', {
     oldPrice: { type: DataTypes.INTEGER, allowNull: false },
     promoPrice: { type: DataTypes.INTEGER, allowNull: false },
     rating: { type: DataTypes.INTEGER, defaultValue: 0 },
+    available: { type: DataTypes.STRING, unique: true, allowNull: false },
+    stockQuantity: { type: DataTypes.STRING, unique: true, allowNull: false },
     img: { type: DataTypes.STRING, allowNull: false },
 });
 
@@ -102,6 +104,7 @@ const Shop = sequelize.define('shop', {
     addressUA: { type: DataTypes.TEXT },
     addressENG: { type: DataTypes.TEXT },
     schedule: { type: DataTypes.TEXT },
+    district: { type: DataTypes.TEXT },
 });
 
 const ShopItem = sequelize.define('shop_item', {

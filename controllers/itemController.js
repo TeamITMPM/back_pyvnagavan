@@ -16,6 +16,8 @@ class ItemController {
                 oldPrice,
                 promoPrice,
                 info,
+                available,
+                stockQuantity,
             } = req.body;
             const { img } = req.files;
             let fileName = uuid.v4() + '.jpg';
@@ -41,6 +43,8 @@ class ItemController {
                 typeId,
                 oldPrice,
                 promoPrice,
+                available,
+                stockQuantity,
                 img: fileName,
             });
 
