@@ -103,6 +103,7 @@ const Shop = sequelize.define('shop', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     addressUA: { type: DataTypes.TEXT },
     addressENG: { type: DataTypes.TEXT },
+    phone: { type: DataTypes.STRING },
     schedule: { type: DataTypes.TEXT },
     district: { type: DataTypes.TEXT },
 });
