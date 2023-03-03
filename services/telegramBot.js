@@ -31,8 +31,6 @@ function orderNotification({ orderInfo, items }) {
         const { quantity } = item;
         const { nameUA, price } = item.product.dataValues;
 
-        // const {quantity}= product.dataValues
-        // console.log("product>>>>>>>>>>>>>>", product.dataValues);
         itemsData.push(
             `%0A    <b>${nameUA}</b>%0A      К:${quantity} Ц:<i>${price}</i> за од/тов`,
         );
@@ -90,22 +88,17 @@ function orderNotification({ orderInfo, items }) {
     }
     console.log(asap);
 
-    // const{}=items
     const messageOrderInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&parse_mode=HTML&text=${itemsData}`;
     const messageDeliveryInfo = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${chatId}&parse_mode=HTML&text=${deliveryInfo}`;
     axios
         .post(messageOrderInfo)
-        .then(() => {
-            console.log(`test success`);
-        })
+
         .catch(error => {
             console.error(`Error sending notification for test:`, error);
         });
     axios
         .post(messageDeliveryInfo)
-        .then(() => {
-            console.log(`test success`);
-        })
+
         .catch(error => {
             console.error(`Error sending notification for test:`, error);
         });

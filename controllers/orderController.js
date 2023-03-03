@@ -58,7 +58,6 @@ class OrderController {
                 return cartItem;
             });
 
-            console.log('finalBasketResponse>>>>>>>>', finalBasketResponse);
             let totalPrice = 0;
 
             finalBasketResponse.map(data => {
