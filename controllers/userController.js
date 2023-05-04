@@ -31,7 +31,7 @@ const generateJwt = (
         },
         process.env.SECRET_KEY,
         {
-            expiresIn: '24h',
+            expiresIn: '7d',
         },
     );
 };
