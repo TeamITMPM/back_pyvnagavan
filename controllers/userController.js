@@ -3,6 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User, Basket } = require('../models/models');
+const uuid = require('uuid');
 
 const generateJwt = (
     basketId,
@@ -215,6 +216,17 @@ class UserController {
             return res
                 .status(500)
                 .json({ message: 'Error updating user information' });
+        }
+    }
+    async createTempBasket(req, res) {
+        try {
+            const basket = await Basket.create({
+                userId: null,
+            });
+
+            return res.json();
+        } catch (err) {
+            console.log(err);
         }
     }
 }

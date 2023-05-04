@@ -55,7 +55,7 @@ class ItemController {
         }
     }
 
-    async getAll(req, res) {
+    async getAll(req, res, next) {
         let { brandId, typeId, limit, page } = req.query;
         page = Number(page) || 1;
         limit = Number(limit) || 9999999;
@@ -93,7 +93,8 @@ class ItemController {
                 include: [{ model: ItemInfo, as: 'info' }],
             });
         }
-        return res.json(item);
+        res.json(item);
+        return next();
     }
     async getOne(req, res) {
         const { id } = req.params;
