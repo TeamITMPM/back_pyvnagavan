@@ -223,8 +223,19 @@ class UserController {
             const basket = await Basket.create({
                 userId: null,
             });
-
-            return res.json();
+            const token = generateJwt(
+                basket.id,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+            );
+            return res.json({ token });
         } catch (err) {
             console.log(err);
         }

@@ -12,5 +12,6 @@ router.get(
     // userController.check,
     basketController.getAll,
 );
+router.get('/createTempBasket', userController.createTempBasket);
 
 module.exports = router;
