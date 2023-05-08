@@ -2,7 +2,7 @@ const ApiError = require('../error/ApiError');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User, Basket } = require('../models/models');
+const { User, Basket, BasketItem } = require('../models/models');
 const uuid = require('uuid');
 
 const generateJwt = (
@@ -38,6 +38,12 @@ const generateJwt = (
 };
 
 class UserController {
+    constructor() {
+        // Вызываем метод deleteTempBasket каждый день в 4 утра
+        setInterval(() => {
+            this.deleteTempBasket();
+        }, 24 * 60 * 60 * 1000); // Запускать каждый день (24 часа * 60 минут * 60 секунд * 1000 миллисекунд)
+    }
     async registration(req, res, next) {
         const {
             email,
@@ -240,6 +246,19 @@ class UserController {
             console.log(err);
         }
     }
+    async deleteTempBasket(req, res) {
+        console.log('deleteTempBasket>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+        await Basket.destroy({
+            where: {
+                userId: null,
+            },
+        });
+        await BasketItem.destroy({
+            where: {
+                basketId: null,
+            },
+        });
+    }
 }
-
 module.exports = new UserController();
+new UserController().deleteTempBasket();

@@ -4,15 +4,21 @@ const ApiError = require('../error/ApiError');
 
 class BasketController {
     async create(req, res) {
-        const { basketId } = req.params;
-        const { itemId, quantity } = req.body;
+        try {
+            const { basketId } = req.params;
+            const { itemId, quantity } = req.body;
 
-        const basketResponse = await BasketItem.create({
-            basketId,
-            itemId,
-            quantity,
-        });
-        return res.json(basketResponse);
+            const basketResponse = await BasketItem.create({
+                basketId,
+                itemId,
+                quantity,
+            });
+
+            return res.json(basketResponse);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 
     async getAll(req, res) {
@@ -58,54 +64,59 @@ class BasketController {
     }
 
     async delete(req, res) {
-        const { basketId } = req.params;
+        try {
+            const { basketId } = req.params;
 
-        const { id } = req.body;
+            const { id } = req.body;
 
-        await BasketItem.destroy({
-            where: {
-                id,
-            },
-        });
-
-        const basketResponse = await BasketItem.findAll({
-            where: {
-                basketId: basketId,
-            },
-        });
-
-        const allItem = await Item.findAll({
-            include: [{ model: ItemInfo, as: 'info' }],
-        });
-
-        const finalBasketResponse = basketResponse.map(cartItem => {
-            const product = allItem.find(item => {
-                return item.dataValues.id === cartItem.itemId;
+            await BasketItem.destroy({
+                where: {
+                    id,
+                },
             });
 
-            if (product) {
-                return {
-                    ...cartItem,
-                    product,
-                };
-            }
-            return cartItem;
-        });
+            const basketResponse = await BasketItem.findAll({
+                where: {
+                    basketId: basketId,
+                },
+            });
 
-        let totalPrice = 0;
+            const allItem = await Item.findAll({
+                include: [{ model: ItemInfo, as: 'info' }],
+            });
 
-        finalBasketResponse.map(data => {
-            const { quantity } = data.dataValues;
-            const { price } = data.product;
+            const finalBasketResponse = basketResponse.map(cartItem => {
+                const product = allItem.find(item => {
+                    return item.dataValues.id === cartItem.itemId;
+                });
 
-            return (totalPrice += quantity * price);
-        });
+                if (product) {
+                    return {
+                        ...cartItem,
+                        product,
+                    };
+                }
+                return cartItem;
+            });
 
-        let lastFinalBasketResponse = [];
-        lastFinalBasketResponse.push(finalBasketResponse);
-        lastFinalBasketResponse.push([totalPrice]);
+            let totalPrice = 0;
 
-        return res.json(lastFinalBasketResponse);
+            finalBasketResponse.map(data => {
+                const { quantity } = data.dataValues;
+                const { price } = data.product;
+
+                return (totalPrice += quantity * price);
+            });
+
+            let lastFinalBasketResponse = [];
+            lastFinalBasketResponse.push(finalBasketResponse);
+            lastFinalBasketResponse.push([totalPrice]);
+
+            return res.json(lastFinalBasketResponse);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 }
 
